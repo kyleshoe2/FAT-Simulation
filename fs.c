@@ -16,6 +16,14 @@
 #include "fs.h"
 #include "drive.h"
 
+struct file_alloc_table
+{
+	struct fat_entry entries[TOTAL_SECTORS];
+};
+
+struct fat_entry
+{
+};
 
 int fdelete(char* fn){
 	return 5;	
@@ -26,8 +34,46 @@ int load(char* fn, void* data, size_t ds){
 }
 
 void format() {
+	if(dmem != 0) {
+		free(dmem);
+		dmem = NULL;
+	}
+	
+	init();
 }
 
 int save(char* fn, void* data, size_t ds){
 	return 5;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
