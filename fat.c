@@ -28,14 +28,14 @@ int store_fat(struct fat *the_fat)
     
     size_t offset = 0;
     int cur_sect = 0;
-    for(int i = 0; i < FAT_SIZE / BYTES_PER_SECTOR; ++i) {
+    for(int i = 0; i < size / BYTES_PER_SECTOR; ++i) {
         write_sector(0, cur_sect, data + offset);
         cur_sect++;
         offset += BYTES_PER_SECTOR;
     }
     printf("Our offset is now %d\n", offset);
     char leftover[BYTES_PER_SECTOR];
-    memcpy(leftover, data + offset, FAT_SIZE - offset);
+    memcpy(leftover, data + offset, size - offset);
     write_sector(1, cur_sect, leftover);
 }
 
