@@ -44,3 +44,4 @@ int fdelete(char*);
  * filesystem if called later. */
 void format();
 
+void mem_map();

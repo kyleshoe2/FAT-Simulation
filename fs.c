@@ -30,7 +30,7 @@ int load(char* fn, void* data, size_t ds){
 
 void format() {
     int cyl, sect;
-    int blank[BYTES_PER_SECTOR] = {0};
+    char blank[BYTES_PER_SECTOR] = "";
     for(cyl = 0; cyl < CYLINDERS; ++cyl) {
         for(sect = 0; sect < SECTORS_PER_CYLINDER; ++sect) {
             int err = write_sector(cyl, sect, blank);
@@ -49,7 +49,18 @@ int save(char* fn, void* data, size_t ds){
 }
 
 
-
+void mem_map()
+{
+    int cyl, sect;
+    int blank[BYTES_PER_SECTOR+1] = {0};
+    for(cyl = 0; cyl < CYLINDERS; ++cyl) {
+        for(sect = 0; sect < SECTORS_PER_CYLINDER; ++sect) {
+            char data[BYTES_PER_SECTOR];
+            read_sector(cyl, sect, data);
+            printf("Cylinder: %d\nSector: %d\n\tData: %s\n\n", cyl, sect, data);
+        }
+    }
+}
 
 
 
