@@ -26,6 +26,13 @@
  * 	full credit.
  */
 
+int main()
+{
+    format();
+    mem_map();
+}
+
+/*
 int main() {
 	int ret;
 
@@ -146,3 +153,4 @@ int main() {
 
 	return 0;
 }
+*/
