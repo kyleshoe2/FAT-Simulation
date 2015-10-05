@@ -57,7 +57,7 @@ void mem_map()
         for(sect = 0; sect < SECTORS_PER_CYLINDER; ++sect) {
             char data[BYTES_PER_SECTOR];
             read_sector(cyl, sect, data);
-            printf("Cylinder: %d\nSector: %d\n\tData: %s\n\n", cyl, sect, data);
+//            printf("Cylinder: %d\nSector: %d\n\tData: %s\n\n", cyl, sect, data);
         }
     }
 }
