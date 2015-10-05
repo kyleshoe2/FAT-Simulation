@@ -1,5 +1,7 @@
 #include "fs.h"
 #include "drive.h"
+#include "fat.h"
+#include "mem_utils.h"
 
 #include<string.h>
 #include<stdio.h>
@@ -28,6 +30,7 @@
 
 int main()
 {
+    printf("The size of our FAT is %d\n", sizeof(struct fat));
     format();
     mem_map();
 }

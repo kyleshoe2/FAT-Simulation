@@ -18,7 +18,7 @@
 
 #include "fs.h"
 #include "drive.h"
-
+#include "fat.h"
 
 int fdelete(char* fn){
 	return 5;	
@@ -28,7 +28,14 @@ int load(char* fn, void* data, size_t ds){
 	return 5;
 }
 
+
+int save(char* fn, void* data, size_t ds){
+	return 5;
+}
+
+
 void format() {
+    // first we clear all the space in the drive
     int cyl, sect;
     char blank[BYTES_PER_SECTOR] = "";
     for(cyl = 0; cyl < CYLINDERS; ++cyl) {
@@ -42,10 +49,15 @@ void format() {
             }
         }
     }
-}
 
-int save(char* fn, void* data, size_t ds){
-	return 5;
+    // now we set up the initial fat
+    struct fat initial_fat;
+    for(int i = 0; i < TOTAL_SECTORS; ++i) {
+        initial_fat.table[i] = EMPTY;
+    }
+
+    store_fat(&initial_fat);
+
 }
 
 
