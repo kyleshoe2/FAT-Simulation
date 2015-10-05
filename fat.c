@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdlib.h>
 
 #include "fat.h"
 #include "drive.h"
@@ -22,8 +23,8 @@ int set_fat_entry_value(struct fat *the_fat, int index, int value)
 
 int store_fat(struct fat *the_fat)
 {
-    char data[FAT_SIZE];
     size_t size = FAT_SIZE;
+    char *data = malloc(sizeof(char) * size);
     memcpy(data, the_fat, size);
     
     size_t offset = 0;
@@ -33,14 +34,33 @@ int store_fat(struct fat *the_fat)
         cur_sect++;
         offset += BYTES_PER_SECTOR;
     }
-    printf("Our offset is now %d\n", offset);
     char leftover[BYTES_PER_SECTOR];
     memcpy(leftover, data + offset, size - offset);
     write_sector(1, cur_sect, leftover);
+    free(data);
+    return 0;
 }
 
 
-
+int load_fat(struct fat *the_fat)
+{
+    size_t size = FAT_SIZE;
+    char *data = malloc(sizeof(char) * size);
+    
+    size_t offset = 0;
+    int cur_sect = 0;
+    for(int i = 0; i < size / BYTES_PER_SECTOR; ++i) {
+        read_sector(0, cur_sect, data + offset);
+        cur_sect++;
+        offset += BYTES_PER_SECTOR;
+    }
+    char leftover[BYTES_PER_SECTOR];
+    read_sector(0, cur_sect, leftover);
+    memcpy(data, leftover, size - offset);
+    memcpy(the_fat, data, size);
+    free(data);
+    return 0;
+}
 
 
 

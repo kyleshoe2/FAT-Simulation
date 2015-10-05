@@ -33,6 +33,10 @@ int main()
     printf("The size of our FAT is %d\n", sizeof(struct fat));
     format();
     mem_map();
+    struct fat *my_fat = malloc(FAT_SIZE);
+    store_fat(my_fat);
+    load_fat(my_fat);
+    free(my_fat);
 }
 
 /*

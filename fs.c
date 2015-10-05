@@ -51,13 +51,13 @@ void format() {
     }
 
     // now we set up the initial fat
-    struct fat initial_fat;
+    struct fat *initial_fat = malloc(FAT_SIZE);
     for(int i = 0; i < TOTAL_SECTORS; ++i) {
-        initial_fat.table[i] = END_OF_FILE;
+        initial_fat->table[i] = END_OF_FILE;
     }
 
-    store_fat(&initial_fat);
-
+    store_fat(initial_fat);
+    free(initial_fat);
 }
 
 
@@ -69,7 +69,7 @@ void mem_map()
         for(sect = 0; sect < SECTORS_PER_CYLINDER; ++sect) {
             char data[BYTES_PER_SECTOR];
             read_sector(cyl, sect, data);
-            printf("Cylinder: %d\nSector: %d\n\tData: %s\n\n", cyl, sect, data);
+//            printf("Cylinder: %d\nSector: %d\n\tData: %s\n\n", cyl, sect, data);
         }
     }
 }

@@ -23,4 +23,4 @@ int set_fat_entry_value(struct fat *, int, int);
 
 int store_fat(struct fat *);
 
-
+int load_fat(struct fat *);
