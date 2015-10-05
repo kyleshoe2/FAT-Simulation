@@ -13,17 +13,12 @@
  * so that the project will compile as-received.
  */
 
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "fs.h"
 #include "drive.h"
 
-struct file_alloc_table
-{
-	struct fat_entry entries[TOTAL_SECTORS];
-};
-
-struct fat_entry
-{
-};
 
 int fdelete(char* fn){
 	return 5;	
@@ -34,18 +29,24 @@ int load(char* fn, void* data, size_t ds){
 }
 
 void format() {
-	if(dmem != 0) {
-		free(dmem);
-		dmem = NULL;
-	}
-	
-	init();
+    int cyl, sect;
+    int blank[BYTES_PER_SECTOR] = {0};
+    for(cyl = 0; cyl < CYLINDERS; ++cyl) {
+        for(sect = 0; sect < SECTORS_PER_CYLINDER; ++sect) {
+            int err = write_sector(cyl, sect, blank);
+            if(err == BAD_CYLINDER) {
+                printf("Bad cylinder: %d\n", cyl);
+
+            } else if(err == BAD_SECTOR) {
+                printf("Bad sector: %d\n", sect);
+            }
+        }
+    }
 }
 
 int save(char* fn, void* data, size_t ds){
 	return 5;
 }
-
 
 
 
