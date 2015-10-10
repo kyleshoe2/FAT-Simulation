@@ -10,8 +10,4 @@ int to_cylinder_number(int mem_addr);
 
 int to_sector_number(int mem_addr);
 
-int store_fat(struct fat *);
-
-int load_fat(struct fat *);
-
 #endif

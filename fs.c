@@ -13,13 +13,57 @@
  * so that the project will compile as-received.
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-
 #include "fs.h"
 #include "drive.h"
 #include "fat.h"
+#include "dir.h"
+
 #include "mem_utils.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+
+int store_fs(struct fs *the_fs)
+{
+    size_t size = sizeof(struct fs);
+    char *data = malloc(sizeof(char) * size);
+    memcpy(data, the_fs, size);
+    
+    size_t offset = 0;
+    int cur_sect = 0;
+    for(int i = 0; i < size / BYTES_PER_SECTOR; ++i) {
+        write_sector(0, cur_sect, data + offset);
+        cur_sect++;
+        offset += BYTES_PER_SECTOR;
+    }
+    char leftover[BYTES_PER_SECTOR];
+    memcpy(leftover, data + offset, size - offset);
+    write_sector(1, cur_sect, leftover);
+    free(data);
+    return 0;
+}
+
+
+int load_fs(struct fat *the_fs)
+{
+    size_t size = sizeof(struct fs);
+    char *data = malloc(sizeof(char) * size);
+    
+    size_t offset = 0;
+    int cur_sect = 0;
+    for(int i = 0; i < size / BYTES_PER_SECTOR; ++i) {
+        read_sector(0, cur_sect, data + offset);
+        cur_sect++;
+        offset += BYTES_PER_SECTOR;
+    }
+    char leftover[BYTES_PER_SECTOR];
+    read_sector(0, cur_sect, leftover);
+    memcpy(data, leftover, size - offset);
+    memcpy(the_fs, data, size);
+    free(data);
+    return 0;
+}
 
 int fdelete(char* fn){
 	return 5;	
@@ -54,10 +98,10 @@ void format() {
     // now we set up the initial fat
     struct fat *initial_fat = malloc(FAT_SIZE);
     for(int i = 0; i < TOTAL_SECTORS; ++i) {
-        initial_fat->table[i] = END_OF_FILE;
+        initial_fat->table[i] = EMPTY;
     }
 
-    store_fat(initial_fat);
+    //store_fat(initial_fat);
     free(initial_fat);
 }
 
@@ -74,6 +118,7 @@ void mem_map()
         }
     }
 }
+
 
 
 
