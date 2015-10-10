@@ -34,12 +34,7 @@ int main()
     printf("The size of our FAT is %d\n", sizeof(struct fat));
     printf("The size of the dir is %d\n", sizeof(struct dir));
     printf("The size of the whole fs is %d\n", sizeof(struct fs));
-    format();
-    mem_map();
-}
-
-/*
-int main() {
+        
 	int ret;
 
 	// Test 1
@@ -64,6 +59,7 @@ int main() {
 	else 
 		printf("** File returned with changes!  Not good.\n");
 	
+    /*
 	// Test 4
 	printf("Now a bigger file!  %d bytes\n", strlen(phrase)*200);
 	char* longphrase = (char*)malloc(strlen(phrase)*200);
@@ -88,7 +84,7 @@ int main() {
 		printf("load returned %d\n", ret);
 		if(ret == NOT_FOUND)
 			printf("load returned the correct error, good!\n");
-		else
+        else
 			printf("** load did not return the expected error (NOT_FOUND)\n");
 	} else
 		printf("** Test 6 should produce an error (NOT_FOUND)\n");
@@ -156,6 +152,13 @@ int main() {
 
 	free(longphrase);
 	free(longphrasecpy);
+
+    */
+
+}
+
+/*
+int main() {
 
 	return 0;
 }
