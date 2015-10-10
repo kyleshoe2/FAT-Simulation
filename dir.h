@@ -4,15 +4,17 @@
 #include "fat.h"
 #include "drive.h"
 
-struct root_dir_ent
+#define MAX_FILENAME_SIZE 12
+
+struct dir_ent
 {
-    char filename[16];
+    char filename[MAX_FILENAME_SIZE];
     short file_addr;
 };
 
-struct root_dir
+struct dir
 {
-    root_dir_ent[(CYLINDER_SIZE - FAT_SIZE) / sizeof(root_dir_ent)] file_entries;
+    struct dir_ent file_entries[(CYLINDER_SIZE - FAT_SIZE) / sizeof(struct dir_ent)];
 };
 
 #endif

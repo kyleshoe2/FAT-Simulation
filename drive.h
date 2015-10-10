@@ -1,3 +1,5 @@
+#ifndef DRIVE_H
+#define DRIVE_H
 
 /* You can assume these are number 0-49 and there is only one head */
 #define CYLINDERS 50
@@ -31,3 +33,4 @@ int read_sector(int, int, void*);
  * BAD_CYLINDER or BAD_SECTOR if these are specified out of range.*/ 
 int write_sector(int, int, void*);
 
+#endif

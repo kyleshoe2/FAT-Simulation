@@ -1,8 +1,21 @@
+#ifndef FS_H
+#define FS_H
+
+#include "fat.h"
+#include "dir.h"
+
 #include<stddef.h>
 
 #define NAME_CONFLICT 1
 #define NO_SPACE 2
 #define NOT_FOUND 3
+
+
+struct fs
+{
+    struct fat the_fat;
+    struct dir root_dir;
+};
 
 
 /* Parameters:
@@ -45,3 +58,5 @@ int fdelete(char*);
 void format();
 
 void mem_map();
+
+#endif

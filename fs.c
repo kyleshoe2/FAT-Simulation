@@ -19,6 +19,7 @@
 #include "fs.h"
 #include "drive.h"
 #include "fat.h"
+#include "mem_utils.h"
 
 int fdelete(char* fn){
 	return 5;	

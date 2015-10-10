@@ -1,3 +1,5 @@
+#ifndef FAT_H
+#define FAT_H
 
 #include "drive.h"
 
@@ -8,7 +10,7 @@
 
 struct fat
 {
-    int table[TOTAL_SECTORS];
+    unsigned short table[TOTAL_SECTORS];
 };
 
 
@@ -20,7 +22,4 @@ struct fat
  */
 int set_fat_entry_value(struct fat *, int, int);
 
-
-int store_fat(struct fat *);
-
-int load_fat(struct fat *);
+#endif
