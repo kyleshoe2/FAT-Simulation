@@ -7,7 +7,6 @@
 #include<string.h>
 #include<stdio.h>
 #include<stdlib.h>
-
 /*
  * Tests in this file:
  * 	1.  Demo of read_sector and write_sector
@@ -64,7 +63,7 @@ int main()
 	printf("Now a bigger file!  %d bytes\n", strlen(phrase)*200);
 	char* longphrase = (char*)malloc(strlen(phrase)*200);
 	for(int i = 0; i < 200; ++i)
-		strcpy(longphrase + i * (strlen(phrase)), phrase);
+    strcpy(longphrase + i * (strlen(phrase)), phrase);
 	if(ret = save("longph.txt", longphrase, strlen(longphrase)))
 		printf("** Received error value:  %d\n", ret);
 	char* longphrasecpy = (char*)malloc(strlen(phrase)*200);

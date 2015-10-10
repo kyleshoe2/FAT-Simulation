@@ -17,8 +17,8 @@
 #include "drive.h"
 #include "fat.h"
 #include "dir.h"
-
 #include "mem_utils.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -45,7 +45,7 @@ int store_fs(struct fs *the_fs)
 }
 
 
-int load_fs(struct fat *the_fs)
+int load_fs(struct fs *the_fs)
 {
     size_t size = sizeof(struct fs);
     char *data = malloc(sizeof(char) * size);
@@ -66,16 +66,47 @@ int load_fs(struct fat *the_fs)
 }
 
 int fdelete(char* fn){
-	return 5;	
+    struct fs *the_fs = malloc(sizeof(struct fs));
+    int ret = 5;
+    load_fs(the_fs);
+    struct dir_ent file_ent;
+    if(get_dir_ent(&the_fs->root_dir, fn, &file_ent)) {
+        ret = NOT_FOUND;
+    };
+    
+    store_fs(the_fs);
+    free(the_fs);
+	return ret;
 }
 
+
 int load(char* fn, void* data, size_t ds){
-	return 5;
+    struct fs *the_fs = malloc(sizeof(struct fs));
+    int ret = 5;
+    load_fs(the_fs);
+    struct dir_ent file_ent;
+    if(get_dir_ent(&the_fs->root_dir, fn, &file_ent)) {
+        ret = NOT_FOUND;
+    };
+
+    store_fs(the_fs);
+    free(the_fs);
+    return ret;
 }
 
 
 int save(char* fn, void* data, size_t ds){
-	return 5;
+    struct fs *the_fs = malloc(sizeof(struct fs));
+    int ret = 5;
+    load_fs(the_fs);
+    struct dir_ent file_ent;
+    if(!get_dir_ent(&the_fs->root_dir, fn, &file_ent)) {
+        ret = NAME_CONFLICT;
+    };
+
+    store_fs(the_fs);
+    free(the_fs);
+	return ret;
 }
 
 
@@ -102,7 +133,7 @@ void format() {
     for(int i = 0; i < TOTAL_SECTORS; ++i) {
         init_fs->the_fat.table[i] = EMPTY;
     }
-
+    memset(&init_fs->root_dir, 0, sizeof(struct dir));
     store_fs(init_fs);
     free(init_fs);
 }
@@ -120,7 +151,6 @@ void mem_map()
         }
     }
 }
-
 
 
 
