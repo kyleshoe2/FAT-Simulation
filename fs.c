@@ -96,13 +96,15 @@ void format() {
     }
 
     // now we set up the initial fat
-    struct fat *initial_fat = malloc(FAT_SIZE);
+    //struct fat *initial_fat = malloc(FAT_SIZE);
+    //struct dir *root_dir = malloc(sizeof(struct dir));
+    struct fs *init_fs = malloc(sizeof(struct fs));
     for(int i = 0; i < TOTAL_SECTORS; ++i) {
-        initial_fat->table[i] = EMPTY;
+        init_fs->the_fat.table[i] = EMPTY;
     }
 
-    //store_fat(initial_fat);
-    free(initial_fat);
+    store_fs(init_fs);
+    free(init_fs);
 }
 
 
