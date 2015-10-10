@@ -1,4 +1,4 @@
-OBJS = tester.o drive.o fs.o fat.o
+OBJS = tester.o drive.o fs.o fat.o mem_utils.o
 CFLAGS=-std=c99 -g
 CC = gcc
 
