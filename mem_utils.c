@@ -9,17 +9,17 @@
  * described here: https://en.wikipedia.org/wiki/Logical_block_addressing#CHS_conversion
  */
 
-int to_mem_addr(int cyl, int sect)
+unsigned short to_mem_addr(int cyl, int sect)
 {
     return cyl * SECTORS_PER_CYLINDER + sect;
 }
 
-int to_cylinder_number(int mem_addr)
+unsigned short to_cylinder_number(unsigned short mem_addr)
 {
     return mem_addr / SECTORS_PER_CYLINDER;
 }
 
-int to_sector_number(int mem_addr) 
+unsigned short to_sector_number(unsigned short mem_addr) 
 {
     return mem_addr % SECTORS_PER_CYLINDER;
 }
