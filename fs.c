@@ -109,11 +109,11 @@ int load(char* fn, void* data, size_t ds){
     sect = to_sector_number(addr);
     char leftover[BYTES_PER_SECTOR];
     read_sector(cyl, sect, leftover);
-    memcpy(data + offset, leftover, ds - offset);
+    size_t to_read = (ds - offset > BYTES_PER_SECTOR) ? BYTES_PER_SECTOR-1 : ds - offset;
+    memcpy(data + offset, leftover, to_read);
     ret = 0;
 
 error:
-    store_fs(the_fs);
     free(the_fs);
     return ret;
 }
@@ -133,7 +133,7 @@ int save(char* fn, void* data, size_t ds){
     };
     
     if(getn_free_sectors(&the_fs->the_fat, n, free_sectors)) {
-        printf("Looks like there aren't %d sectors available!\n", n);
+        //printf("Looks like there aren't %d sectors available!\n", n);
         ret = NO_SPACE;
         goto error;
     }
