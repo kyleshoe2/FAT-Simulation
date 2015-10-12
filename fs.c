@@ -68,16 +68,15 @@ int load_fs(struct fs *the_fs)
 
 int fdelete(char* fn){
     struct fs *the_fs = malloc(sizeof(struct fs));
-    int ret = 5;
+    int ret = 0;
     load_fs(the_fs);
-    struct dir_ent file_ent;
-    if(get_dir_ent(&the_fs->root_dir, fn, &file_ent)) {
+    if(rem_dir_ent(&the_fs->root_dir, fn)) {
         ret = NOT_FOUND;
     };
-    memset(&file_ent, 0, sizeof(struct dir_ent));
+
     store_fs(the_fs);
     free(the_fs);
-	return 0;
+	return ret;
 }
 
 
@@ -125,13 +124,14 @@ int save(char* fn, void* data, size_t ds){
     int ret = 5;
     load_fs(the_fs);
     struct dir_ent file_ent;
+    unsigned short n = ds / BYTES_PER_SECTOR + 1;
+    unsigned short *free_sectors = malloc(sizeof(unsigned short) * n);
+    
     if(!get_dir_ent(&the_fs->root_dir, fn, &file_ent)) {
         ret = NAME_CONFLICT;
         goto error;
     };
     
-    unsigned short n = ds / BYTES_PER_SECTOR + 1;
-    unsigned short *free_sectors = malloc(sizeof(unsigned short) * n);
     if(getn_free_sectors(&the_fs->the_fat, n, free_sectors)) {
         printf("Looks like there aren't %d sectors available!\n", n);
         ret = NO_SPACE;

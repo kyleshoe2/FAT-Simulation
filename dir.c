@@ -30,3 +30,18 @@ int set_dir_ent(struct dir *root_dir, char *filename, unsigned short addr)
     }
     return 1;
 }
+
+
+int rem_dir_ent(struct dir *root_dir, char *filename)
+{
+    for(int i = 0; i < MAX_FILES; ++i) {
+        char *dir_ent_fn = root_dir->file_entries[i].filename;
+        unsigned short *dir_ent_addr = &root_dir->file_entries[i].file_addr;
+        if(!strncmp(filename, dir_ent_fn, MAX_FILENAME_SIZE)) {
+            memset(dir_ent_fn, '\0', MAX_FILENAME_SIZE);
+            *dir_ent_addr = 0;
+            return 0;
+        }
+    }
+    return 1;
+}
