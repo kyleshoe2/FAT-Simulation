@@ -32,7 +32,14 @@
 void my_tests()
 {
     struct fat *the_fat = malloc(sizeof(struct fat));
+    struct dir root_dir;
     memset(the_fat->table, EMPTY, TOTAL_SECTORS);
+    memset(&root_dir, 0, sizeof(struct dir));
+
+    set_dir_ent(&root_dir, "HELLO.TXT", 1234);
+    struct dir_ent a;
+    printf("Filename: %s\tAddress: %d\n", root_dir.file_entries[0].filename, root_dir.file_entries[0].file_addr);
+
     unsigned short addr = 0;
     if(next_free_sector(the_fat, &addr)) {
         printf("Huh, next_free_sector doesn't work..\n");

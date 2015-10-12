@@ -107,7 +107,7 @@ int save(char* fn, void* data, size_t ds){
     
     unsigned short n = ds / BYTES_PER_SECTOR + 1;
     unsigned short *free_sectors = malloc(sizeof(unsigned short) * n);
-    if(!getn_free_sectors(&the_fs->the_fat, n, free_sectors)) {
+    if(getn_free_sectors(&the_fs->the_fat, n, free_sectors)) {
         printf("Looks like there aren't %d sectors available!\n", n);
         ret = NO_SPACE;
         goto error;
