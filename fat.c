@@ -76,7 +76,15 @@ int getn_free_sectors(struct fat *the_fat, unsigned short n, unsigned short *des
 }
 
 
+int get_next_addr(struct fat *the_fat, unsigned short addr, unsigned short *next_addr)
+{
+    if(the_fat->table[addr] == END_OF_FILE) {
+        return 1;
+    }
 
+    *next_addr = the_fat->table[addr];
+    return 0;
+}
 
 
 

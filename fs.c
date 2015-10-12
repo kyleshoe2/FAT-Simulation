@@ -65,6 +65,7 @@ int load_fs(struct fs *the_fs)
     return 0;
 }
 
+
 int fdelete(char* fn){
     struct fs *the_fs = malloc(sizeof(struct fs));
     int ret = 5;
@@ -73,10 +74,10 @@ int fdelete(char* fn){
     if(get_dir_ent(&the_fs->root_dir, fn, &file_ent)) {
         ret = NOT_FOUND;
     };
-    
+    memset(&file_ent, 0, sizeof(struct dir_ent));
     store_fs(the_fs);
     free(the_fs);
-	return ret;
+	return 0;
 }
 
 
@@ -87,8 +88,32 @@ int load(char* fn, void* data, size_t ds){
     struct dir_ent file_ent;
     if(get_dir_ent(&the_fs->root_dir, fn, &file_ent)) {
         ret = NOT_FOUND;
-    };
+        goto error;
+    }
 
+    unsigned short addr = file_ent.file_addr;
+    unsigned short next_addr = 0;
+    size_t offset = 0;
+    int cyl, sect;
+    while(!get_next_addr(&the_fs->the_fat, addr, &next_addr) && offset < ds) {
+        cyl = to_cylinder_number(addr);
+        sect = to_sector_number(addr);
+        read_sector(cyl, sect, data + offset);
+        offset += BYTES_PER_SECTOR;
+        addr = next_addr;
+    }
+    if(offset >= ds) {
+        printf("looks like data cant hold the whole file!\n");
+        goto error;
+    }
+    cyl = to_cylinder_number(addr);
+    sect = to_sector_number(addr);
+    char leftover[BYTES_PER_SECTOR];
+    read_sector(cyl, sect, leftover);
+    memcpy(data + offset, leftover, ds - offset);
+    ret = 0;
+
+error:
     store_fs(the_fs);
     free(the_fs);
     return ret;
@@ -198,11 +223,11 @@ void mem_map()
 {
     int cyl, sect;
     int blank[BYTES_PER_SECTOR+1] = {0};
-    for(cyl = 0; cyl < CYLINDERS; ++cyl) {
+    for(cyl = 1; cyl < CYLINDERS; ++cyl) {
         for(sect = 0; sect < SECTORS_PER_CYLINDER; ++sect) {
             char data[BYTES_PER_SECTOR];
             read_sector(cyl, sect, data);
-//            printf("Cylinder: %d\nSector: %d\n\tData: %s\n\n", cyl, sect, data);
+            printf("Cylinder: %d\nSector: %d\n\tData: %s\n\n", cyl, sect, data);
         }
     }
 }

@@ -20,11 +20,11 @@ int set_dir_ent(struct dir *root_dir, char *filename, unsigned short addr)
 {
     for(int i = 0; i < MAX_FILES; ++i) {
         char *dir_ent_fn = root_dir->file_entries[i].filename;
-        unsigned short dir_ent_addr = root_dir->file_entries[i].file_addr;
+        unsigned short *dir_ent_addr = &root_dir->file_entries[i].file_addr;
 
         if(dir_ent_fn[0] == '\0') {
             strcpy(dir_ent_fn, filename);
-            dir_ent_addr = addr;
+            *dir_ent_addr = addr;
             return 0;
         }
     }

@@ -43,6 +43,8 @@ int next_free_sector(struct fat *, unsigned short *);
  */
 int next_free_sector_from_start(struct fat *, unsigned short *, unsigned short);
 
-
 int getn_free_sectors(struct fat *, unsigned short, unsigned short *);
+
+int get_next_addr(struct fat *, unsigned short, unsigned short *);
+
 #endif

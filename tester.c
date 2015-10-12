@@ -117,8 +117,9 @@ int main()
 		printf("File store and load correctly, good!\n");
 	else 
 		printf("** File returned with changes!  Not good.\n");
-	
-    /*
+
+
+ 
 	// Test 4
 	printf("Now a bigger file!  %d bytes\n", strlen(phrase)*200);
 	char* longphrase = (char*)malloc(strlen(phrase)*200);
@@ -134,6 +135,8 @@ int main()
 	else
 		printf("** Long file returned with errors.\n");
 
+//    mem_map();
+    
 	// Test 5
 	if(ret = fdelete("phrase.txt"))
 		printf("** Received error value:  %d\n", ret);
@@ -147,7 +150,7 @@ int main()
 			printf("** load did not return the expected error (NOT_FOUND)\n");
 	} else
 		printf("** Test 6 should produce an error (NOT_FOUND)\n");
-
+/*
 	// Test 7
 	if(ret = fdelete("phrase.txt")) {
 		printf("fdelete returned %d\n", ret);
@@ -167,7 +170,7 @@ int main()
 			printf("** save did not produce the expected error (NAME_CONFLICT)\n");
 	} else
 		printf("** Test 8 should produce an error (NAME_CONFLICT)\n");
-
+/*
 	// Test 9
 	int count = 0;
 	for(char name[11] = "bigt.txt";!(ret = save(name, longphrase, strlen(longphrase)));sprintf(name, "bigt%d.txt", ++count));
