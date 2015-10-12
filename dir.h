@@ -19,4 +19,6 @@ struct dir
 
 int get_dir_ent(struct dir *, char *, struct dir_ent *);
 
+int set_dir_ent(struct dir *, char *, unsigned short addr);
+
 #endif

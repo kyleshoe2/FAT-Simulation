@@ -28,12 +28,65 @@
  * 	full credit.
  */
 
+// "unit tests" that I wrote to make sure all my stuff works correctly
+void my_tests()
+{
+    struct fat *the_fat = malloc(sizeof(struct fat));
+    memset(the_fat->table, EMPTY, TOTAL_SECTORS);
+    unsigned short addr = 0;
+    if(next_free_sector(the_fat, &addr)) {
+        printf("Huh, next_free_sector doesn't work..\n");
+        return;
+    }
+
+    printf("The first free sector we got was %d\n", addr);
+
+    if(set_fat_entry_value(the_fat, addr, addr+1)) {
+        printf("set_fat_ent_value didn't work..\n");
+        return;
+    }
+
+    next_free_sector(the_fat, &addr);
+    printf("Now running next_free_sector again gives %d\n", addr);
+    next_free_sector_from_start(the_fat, &addr, addr + 32);
+    printf("Running next_free_sector_from_start with addr = addr + 32 gives %d\n", addr);
+
+    set_fat_entry_value(the_fat, addr, 0xABC);
+
+    unsigned short size = 40;
+    unsigned short *free_sectors = malloc(sizeof(short) * size);
+    if(getn_free_sectors(the_fat, size, free_sectors)) {
+        printf("getn_free_sectors didn't work\n");
+    }
+    printf("getn_free_sectors worked! Let's see all those addresses\n");
+    int i;
+    for(i = 0; i < size-1; ++i) {
+        printf("%d --> ", free_sectors[i]);
+    }
+    printf("%d\n", free_sectors[i]);
+
+    size = TOTAL_SECTORS * 2;
+    unsigned short *free_sectors2 = malloc(sizeof(short) * size);
+    if(getn_free_sectors(the_fat, size, free_sectors2)) {
+        printf("Perfect! we don't have %d sectors to begin with\n", size);
+    } else {
+        printf("Err, somehow getn_free_sectors worked with double the amount of sectors we have\n");
+        return;
+    }
+
+    free(the_fat);
+    free(free_sectors);
+    free(free_sectors2);
+}
+
 int main()
 {
     printf("The size of our FAT is %d\n", sizeof(struct fat));
     printf("The size of the dir is %d\n", sizeof(struct dir));
     printf("The size of the whole fs is %d\n", sizeof(struct fs));
-        
+    
+//    my_tests();
+
 	int ret;
 
 	// Test 1

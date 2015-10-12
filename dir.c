@@ -14,3 +14,17 @@ int get_dir_ent(struct dir *root_dir, char *filename, struct dir_ent *dest)
     }
     return 1;
 }
+
+
+int set_dir_ent(struct dir *root_dir, char *filename, unsigned short addr)
+{
+    for(int i = 0; i < MAX_FILES; ++i) {
+        struct dir_ent cur = root_dir->file_entries[i];
+        if(!cur.filename) {
+            strncpy(cur.filename, filename, strlen(filename));
+            cur.file_addr = addr;
+            return 0;
+        }
+    }
+    return 1;
+}

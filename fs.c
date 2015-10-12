@@ -102,10 +102,65 @@ int save(char* fn, void* data, size_t ds){
     struct dir_ent file_ent;
     if(!get_dir_ent(&the_fs->root_dir, fn, &file_ent)) {
         ret = NAME_CONFLICT;
+        goto error;
     };
+    
+    unsigned short n = ds / BYTES_PER_SECTOR + 1;
+    unsigned short *free_sectors = malloc(sizeof(unsigned short) * n);
+    if(!getn_free_sectors(&the_fs->the_fat, n, free_sectors)) {
+        printf("Looks like there aren't %d sectors available!\n", n);
+        ret = NO_SPACE;
+        goto error;
+    }
 
+    // now we actually store our file
+    size_t offset = 0;
+    unsigned short addr, next_addr;
+    int cyl, sect;
+    addr = free_sectors[0];
+    // set the initial root_dir entry
+    if(set_dir_ent(&the_fs->root_dir, fn, addr)) {
+        printf("So we couldn't find an available space in our root_dir\n");
+        ret = NO_SPACE;
+        goto error;
+    }
+
+    for(int i = 0; i < n-1; ++i) {
+        addr = free_sectors[i];
+        next_addr = free_sectors[i+1];
+        cyl = to_cylinder_number(addr);
+        sect = to_sector_number(addr);
+        if(set_fat_entry_value(&the_fs->the_fat, addr, next_addr)) {
+            printf("Apparently %d is not a valid address!\n", next_addr);
+            goto error;
+        }
+
+        if(write_sector(cyl, sect, data + offset)) {
+            printf("Something went wrong with write_sector\n");
+            goto error;
+        }
+        offset += BYTES_PER_SECTOR;
+    }
+    char leftover[BYTES_PER_SECTOR];
+    memcpy(leftover, data + offset, ds - offset);
+    addr = free_sectors[n-1];
+    cyl = to_cylinder_number(addr);
+    sect = to_sector_number(addr);
+    if(set_fat_entry_value(&the_fs->the_fat, addr, END_OF_FILE)) {
+        printf("We couldn't set the last addr to END_OF_FILE!\n");
+        goto error;
+    }
+
+    if(write_sector(cyl, sect, leftover)) {
+        printf("Something went wrong with writing the last bit of data!\n");
+        goto error;
+    }
+    ret = 0;
+
+error:
     store_fs(the_fs);
     free(the_fs);
+    free(free_sectors);
 	return ret;
 }
 
