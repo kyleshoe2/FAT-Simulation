@@ -195,6 +195,15 @@ int main()
 		printf("** File read with errors from full drive\n");
 */
 
+	// Test 10
+	longphrasecpy[100]=0;
+	if(ret = load("bigt50.txt", longphrasecpy, strlen(longphrase)))
+		printf("** Received error value:  %d\n", ret);
+	if(!strcmp(longphrase, longphrasecpy))
+		printf("File correctly read from full drive, good!\n");
+	else
+		printf("** File read with errors from full drive\n");
+
 	// Test 11
 	int newcount = 0;
 	for(char name[11] = "bigt.txt";!(ret = fdelete(name));sprintf(name, "bigt%d.txt", ++newcount));
